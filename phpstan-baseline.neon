@@ -1,0 +1,116 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Foundation\\\\Auth\\\\User\\:\\:updateProfilePhoto\\(\\)\\.$#"
+			count: 1
+			path: app/Actions/Fortify/UpdateUserProfileInformation.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Foundation\\\\Auth\\\\User\\:\\:\\$tokens\\.$#"
+			count: 1
+			path: app/Actions/Jetstream/DeleteUser.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Foundation\\\\Auth\\\\User\\:\\:deleteProfilePhoto\\(\\)\\.$#"
+			count: 1
+			path: app/Actions/Jetstream/DeleteUser.php
+
+		-
+			message: "#^Binary operation \"\\+\" between string and 1 results in an error\\.$#"
+			count: 2
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: "#^Binary operation \"\\+\" between string and 1 results in an error\\.$#"
+			count: 1
+			path: app/Http/Controllers/ApiController.php
+
+		-
+			message: "#^Called 'take' on Laravel collection, but could have been retrieved as a query\\.$#"
+			count: 1
+			path: app/Http/Controllers/ApiController.php
+
+		-
+			message: "#^Parameter \\#1 \\$message of function logger expects string\\|null, array given\\.$#"
+			count: 1
+			path: app/Http/Controllers/ApiController.php
+
+		-
+			message: "#^Variable \\$fileName might not be defined\\.$#"
+			count: 1
+			path: app/Http/Controllers/ApiController.php
+
+		-
+			message: "#^Variable \\$invoice might not be defined\\.$#"
+			count: 1
+			path: app/Http/Controllers/ApiController.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 1
+			path: app/Http/Controllers/Auth/PasswordResetLinkController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Models\\\\Invoice\\:\\:\\$sums\\.$#"
+			count: 2
+			path: app/Http/Controllers/AuthController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Models\\\\Stock_in\\:\\:\\$sumOfStock\\.$#"
+			count: 1
+			path: app/Http/Controllers/AuthController.php
+
+		-
+			message: "#^Call to an undefined method App\\\\Http\\\\Controllers\\\\AuthController\\:\\:guard\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/AuthController.php
+
+		-
+			message: "#^Called 'take' on Laravel collection, but could have been retrieved as a query\\.$#"
+			count: 2
+			path: app/Http/Controllers/AuthController.php
+
+		-
+			message: "#^Parameter \\#2 \\$operator of method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Invoice\\>\\:\\:whereMonth\\(\\) expects string, array\\<int, string\\> given\\.$#"
+			count: 1
+			path: app/Http/Controllers/AuthController.php
+
+		-
+			message: "#^Parameter \\#2 \\$operator of method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Invoice\\>\\:\\:whereMonth\\(\\) expects string, int given\\.$#"
+			count: 1
+			path: app/Http/Controllers/AuthController.php
+
+		-
+			message: "#^Parameter \\#2 \\$string of function explode expects string, int given\\.$#"
+			count: 2
+			path: app/Http/Controllers/AuthController.php
+
+		-
+			message: "#^Parameter \\#3 \\$value of method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Invoice\\>\\:\\:whereMonth\\(\\) expects DateTimeInterface\\|string\\|null, array\\<int, string\\> given\\.$#"
+			count: 1
+			path: app/Http/Controllers/AuthController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Models\\\\Inventory\\:\\:\\$stock_status\\.$#"
+			count: 1
+			path: app/Http/Controllers/InventoryController.php
+
+		-
+			message: "#^Variable \\$image might not be defined\\.$#"
+			count: 1
+			path: app/Http/Controllers/ProductController.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 1
+			path: app/Http/Middleware/Admin.php
+
+		-
+			message: "#^Offset 0 does not exist on App\\\\Models\\\\User\\.$#"
+			count: 1
+			path: app/Http/Middleware/ApiMiddleware.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 1
+			path: app/Http/Middleware/ApiMiddleware.php
