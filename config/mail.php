@@ -41,7 +41,7 @@ return [
             'encryption' => env('MAIL_ENCRYPTION', 'tls'),
             'username' => env('MAIL_USERNAME','pointofsale.mm@gmail.com'),
             'password' => env('MAIL_PASSWORD','uosu bexm ylqe kgup'),
-            'timeout' => null,
+            'timeout' => null, 
             'local_domain' => env('MAIL_EHLO_DOMAIN'),
         ],
 

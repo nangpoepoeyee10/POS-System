@@ -2,19 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
-use App\Models\User;
-use App\Models\Invoice;
-use App\Models\Product;
 use App\Models\Category;
-use App\Models\Stock_in;
 use App\Models\Inventory;
+use App\Models\Invoice;
 use App\Models\Invoice_item;
+use App\Models\Product;
+use App\Models\Stock_in;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -23,11 +21,10 @@ class ApiController extends Controller
 {
     public function loginApi(Request $request)
     {
-
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password], true)) {
             $result = User::select('id', 'staff_id', 'name', 'email', 'image', 'role', 'gender')
                 ->where('email', $request->email)->first();
-            $token = $request->user()->createToken('login_token')->plainTextToken; //samctum
+            $token = $request->user()->createToken('login_token')->plainTextToken; // samctum
             // $token = $request->user()->createToken('login_token')->accessToken; //oAuth
             // $decodedImage = base64_encode(storage_path().$result->image);
             // $imagePath =  public_path('storage/'.$result->image);
@@ -40,12 +37,13 @@ class ApiController extends Controller
                 'result' => $result,
                 // 'decoded_image' => $base64Image
             ];
-            return response()->json($response, 200); // return response()->json(["status" => 200, $token, $result], 200);
 
+            return response()->json($response, 200); // return response()->json(["status" => 200, $token, $result], 200);
         } else {
-            return response()->json(["status" => 401, "data" => "User name and Password is incorrect."], 200);
+            return response()->json(['status' => 401, 'data' => 'User name and Password is incorrect.'], 200);
         }
     }
+
     public function userCreate(Request $request)
     {
         $data = [
@@ -56,31 +54,32 @@ class ApiController extends Controller
             'role' => 'user',
         ];
         User::create($data);
-        return response()->json(["status" => true], 200);
+
+        return response()->json(['status' => true], 200);
     }
 
-    //getUserData
+    // getUserData
     public function getUserData()
     {
-
         $data = User::get();
-        return response()->json(["status" => true, $data, 200]);
+
+        return response()->json(['status' => true, $data, 200]);
     }
 
-    //updateUser
+    // updateUser
     public function updateUserApi(Request $request)
     {
         if ($request->hasFile('image')) {
             $dbImage = User::where('id', $request->userId)->first();
             $dbImage = $dbImage['image'];
             if ($dbImage != null) {
-                Storage::delete('/public' . $dbImage);
+                Storage::delete('/public'.$dbImage);
             }
-            $fileName = uniqid() . $request->file('image')->getClientOriginalName();
+            $fileName = uniqid().$request->file('image')->getClientOriginalName();
             $request->file('image')->storeAs('public', $fileName);
         }
         Validator::make($request->all(), [
-            'name' => 'required|unique:users,name,' . $request->id,
+            'name' => 'required|unique:users,name,'.$request->id,
             'image' => 'mimes:png,jpg,jfjf,jpeg',
         ]);
         $data = [
@@ -89,37 +88,46 @@ class ApiController extends Controller
             'image' => $fileName,
         ];
         User::where('id', $request->userId)->update($data);
-        return response()->json(["status" => true, 200]);
+
+        return response()->json(['status' => true, 200]);
     }
 
-    //deleteUserApi
+    // deleteUserApi
     public function deleteUserApi(Request $request)
     {
         User::where('id', $request->userId)->delete();
-        return response()->json(["status" => true, 200]);
+
+        return response()->json(['status' => true, 200]);
     }
-    //category create
+
+    // category create
     public function createCategoryApi(Request $request)
     {
         $data = [
             'name' => $request->name,
         ];
         Category::create($data);
-        return response()->json(["status" => true], 200);
+
+        return response()->json(['status' => true], 200);
     }
-    //category delete
+
+    // category delete
     public function deleteCategoryApi(Request $request)
     {
         Category::where('id', $request->categoryId)->delete();
-        return response()->json(["status" => true, 200]);
+
+        return response()->json(['status' => true, 200]);
     }
-    //retrieve category
+
+    // retrieve category
     public function getCategoryData()
     {
         $data = Category::get();
-        return response()->json(["status" => true, $data, 200]);
+
+        return response()->json(['status' => true, $data, 200]);
     }
-    //create product
+
+    // create product
     public function createProductApi(Request $request)
     {
         $data = [
@@ -135,25 +143,29 @@ class ApiController extends Controller
             'description' => $request->description,
         ];
         Product::create($data);
-        return response()->json(["status" => true], 200);
+
+        return response()->json(['status' => true], 200);
     }
 
-    //productdeleteapi
+    // productdeleteapi
     public function deleteProductApi(Request $request)
     {
         Product::where('id', $request->productId)->delete();
-        return response()->json(["status" => true, 200]);
+
+        return response()->json(['status' => true, 200]);
     }
-    //retrieveproductapi
+
+    // retrieveproductapi
     public function getProductData()
     {
         $data = Product::select('products.*', 'categories.name as category_name')
             ->leftJoin('categories', 'categories.id', 'products.category_id')
             ->get();
-        return response()->json(["status" => true, $data, 200]);
+
+        return response()->json(['status' => true, $data, 200]);
     }
 
-    //stockcreateapi
+    // stockcreateapi
     public function createStockApi(Request $request)
     {
         $data = [
@@ -163,23 +175,26 @@ class ApiController extends Controller
             'date' => $request->date,
         ];
         Stock_in::create($data);
-        return response()->json(["status" => true], 200);
+
+        return response()->json(['status' => true], 200);
     }
 
-    //stockdeleteapi
+    // stockdeleteapi
     public function deleteStockApi(Request $request)
     {
         Stock_in::where('id', $request->stockId)->delete();
-        return response()->json(["status" => true, 200]);
+
+        return response()->json(['status' => true, 200]);
     }
 
-    //retrievestockapi
+    // retrievestockapi
     public function getStockData()
     {
         $data = Stock_in::select('stock_ins.*', 'products.product_name as product_name')
             ->leftJoin('products', 'products.id', 'stock_ins.product_id')
             ->get();
-        return response()->json(["status" => true, $data, 200]);
+
+        return response()->json(['status' => true, $data, 200]);
     }
 
     // retrieve best selling product
@@ -188,8 +203,10 @@ class ApiController extends Controller
         $bestseller = Inventory::orderBy('stock_balance', 'asc')
             ->leftJoin('products', 'products.id', 'inventories.product_id')
             ->get()->take(10);
-        return response()->json(["status" => true, $bestseller, 200]);
+
+        return response()->json(['status' => true, $bestseller, 200]);
     }
+
     public function createOrder(Request $request)
     {
         DB::beginTransaction();
@@ -199,9 +216,9 @@ class ApiController extends Controller
             $query = Invoice::select('invoice_id')->max('invoice_id');
             if ($query) {
                 $e = explode('-', $query);
-                $invoice_id = "INV-" . str_pad($e[1] + 1, 6, '0', STR_PAD_LEFT);
+                $invoice_id = 'INV-'.str_pad($e[1] + 1, 6, '0', STR_PAD_LEFT);
             } else {
-                $invoice_id = "INV-000001";
+                $invoice_id = 'INV-000001';
             }
             foreach ($result as $r) {
                 $invoice = [
@@ -235,10 +252,11 @@ class ApiController extends Controller
             }
             $invoice = Invoice::create($invoice);
             DB::commit();
-            return response()->json(["status" => true], 200);
 
-        } catch(Exception $e) {
+            return response()->json(['status' => true], 200);
+        } catch (\Exception $e) {
             DB::rollBack();
+
             return response()->json(['status' => false], 500);
         }
     }
@@ -256,22 +274,23 @@ class ApiController extends Controller
         if (Hash::check($request->old_pwd, $dataHash)) {
             $requestHash = Hash::make($request->new_pwd);
             User::where('id', $request->user_id)->update(['password' => $requestHash]);
-            return response()->json(["status" => true, 'message' => 'change password successful.'], 200);
+
+            return response()->json(['status' => true, 'message' => 'change password successful.'], 200);
         } else {
-            return response()->json(["status" => false, 'message' => 'old password and new password does not match.'], 401);
+            return response()->json(['status' => false, 'message' => 'old password and new password does not match.'], 401);
         }
     }
+
     public function editProfileApi(Request $request)
     {
         logger($request);
         Validator::make($request->all(), [
-            'email' => 'unique:users,email,' . $request->user_id,
+            'email' => 'unique:users,email,'.$request->user_id,
         ], [])->validate();
         $data = [
             'name' => $request->name,
             'email' => $request->email,
             'gender' => $request->gender,
-
         ];
         if (asset($request->image)) {
             // $imagePath =  public_path('storage/'.$request->image);
@@ -292,13 +311,13 @@ class ApiController extends Controller
         if ($response) {
             $result = User::where('id', $request->user_id)->get()->toArray();
 
-            return response()->json(["status" => true, 'result' => $result, 'message' => 'update profile successful.'], 200);
+            return response()->json(['status' => true, 'result' => $result, 'message' => 'update profile successful.'], 200);
         } else {
-            return response()->json(["status" => false, 'message' => 'unsuccess'], 401);
+            return response()->json(['status' => false, 'message' => 'unsuccess'], 401);
         }
     }
 
-    //totalSale
+    // totalSale
     public function totalSaleQty()
     {
         $date = Carbon::now();
@@ -308,21 +327,24 @@ class ApiController extends Controller
         $totalQty = Invoice_item::select(DB::raw('sum(qty) as total_qty'))
             ->whereDate('created_at', $date)->get();
 
-        return response()->json(["status" => 200, $totalSale, $totalQty], 200);
+        return response()->json(['status' => 200, $totalSale, $totalQty], 200);
     }
 
-    //retrieve invoice id and total amount
+    // retrieve invoice id and total amount
     public function invoiceId()
     {
         $invoices = Invoice::get();
         $receipt = Invoice_item::select('invoice_items.*', 'products.product_name as product_name')
             ->leftJoin('products', 'products.id', 'invoice_items.product_id')
             ->get();
-        return response()->json(["status" => true, $invoices, $receipt, 200]);
+
+        return response()->json(['status' => true, $invoices, $receipt, 200]);
     }
 
     public function logoutApi(Request $request)
-    {   $request->user()->currentAccessToken()->delete();
+    {
+        $request->user()->currentAccessToken()->delete();
+
         return response()->json(['message' => 'Successfully logged out']);
     }
 }

@@ -34,7 +34,7 @@
               <div class="row align-items-center mt-5">
                     <div class="header-text my-4 text-center">
 
-                         <h5>Forgot Password</h5>
+                         <h5>Forgot Password</h5> 
                     </div>
                     <form action="{{ route('forgotPassword') }}" method="POST" enctype="multipart/form-data" class="login100-form validate-form">
                          @csrf

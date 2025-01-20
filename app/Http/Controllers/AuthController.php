@@ -2,25 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
-use App\Models\User;
+use App\Models\Inventory;
 use App\Models\Invoice;
 use App\Models\Product;
 use App\Models\Stock_in;
-use App\Models\Inventory;
-use Illuminate\Support\Str;
-use App\Models\Invoice_item;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
-    //dashboard
-    //barchart
+    // dashboard
+    // barchart
     public function dashboard()
     {
         $stock = Stock_in::select(
@@ -67,15 +66,15 @@ class AuthController extends Controller
         $last_month = Carbon::now()->subMonth();
         $last_month = $last_month->month;
 
-        $today_income = Invoice::select(DB::raw('sum(total_amount) as sums'))->whereDate('created_at',Carbon::now())->get()->toArray();
-        $yesterday_income = Invoice::select(DB::raw('sum(total_amount) as sums'))->whereDate('created_at',Carbon::yesterday())->get()->toArray();
+        $today_income = Invoice::select(DB::raw('sum(total_amount) as sums'))->whereDate('created_at', Carbon::now())->get()->toArray();
+        $yesterday_income = Invoice::select(DB::raw('sum(total_amount) as sums'))->whereDate('created_at', Carbon::yesterday())->get()->toArray();
 
-        $this_month =Invoice::select(DB::raw('sum(total_amount) as sums'))->whereMonth('created_at',$this_month)->get()->toArray();
-        $last_month = Invoice::select(DB::raw('sum(total_amount) as sums'))->whereMonth('created_at',$last_month)->get()->toArray();
+        $this_month = Invoice::select(DB::raw('sum(total_amount) as sums'))->whereMonth('created_at', $this_month)->get()->toArray();
+        $last_month = Invoice::select(DB::raw('sum(total_amount) as sums'))->whereMonth('created_at', $last_month)->get()->toArray();
         $compareIncome = $today_income[0]['sums'] < $yesterday_income[0]['sums'] ? 'less' : 'not less';
         $compareIncomeMonthly = $this_month[0]['sums'] < $last_month[0]['sums'] ? 'less' : 'not less';
 
-        return view('admin.first', compact('stockBalance', 'day', 'products1', 'products2', 'carbon_products_daily', 'monthly_sale', 'year', 'db_year','compareIncome','compareIncomeMonthly','this_month'));
+        return view('admin.first', compact('stockBalance', 'day', 'products1', 'products2', 'carbon_products_daily', 'monthly_sale', 'year', 'db_year', 'compareIncome', 'compareIncomeMonthly', 'this_month'));
     }
 
     public function login()
@@ -83,17 +82,17 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    //forgotPasswordPage
+    // forgotPasswordPage
     public function forgotPasswordPage()
     {
         return view('auth.forgot-password');
     }
 
-    //forgotPassword
+    // forgotPassword
     public function forgotPassword(Request $request)
     {
         Validator::make($request->all(), [
-            'email' => 'required|exists:users,email'
+            'email' => 'required|exists:users,email',
         ], [])->validate();
 
         $token = Str::random(64);
@@ -109,23 +108,22 @@ class AuthController extends Controller
             $message->subject('Reset Password');
         });
 
-        return back()->with(['message' => "reset password has been send"]);
+        return back()->with(['message' => 'reset password has been send']);
     }
 
-    //resetPasswordPage
+    // resetPasswordPage
     public function resetPasswordPage($token)
     {
         return view('auth.reset-password', ['token' => $token]);
     }
 
-    //resetPassword
+    // resetPassword
     public function resetPassword(Request $request)
     {
-
         Validator::make($request->all(), [
             'email' => 'required|email|exists:users,email',
             'password' => 'required|min:8|confirmed',
-            'password_confirmation' => 'required|min:8'
+            'password_confirmation' => 'required|min:8',
         ], [])->validate();
         $data = DB::table('password_resets')->where([
             'email' => $request->email,
@@ -137,20 +135,21 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->update(['password' => Hash::make($request->password)]);
         DB::table('password_resets')->where(['email' => $request->email])->delete();
-        toast('Password has been changed','success');
+        toast('Password has been changed', 'success');
+
         return redirect('/')->with('message', 'Password has been changed!');
     }
 
     public function logout(Request $request)
     {
         $this->guard()->logout();
+
         return redirect('/');
     }
 
     public function loginUser(Request $request)
     {
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password], true)) {
-
             if (Auth::user()->role != 'staff') {
                 return redirect()->route('dashboard');
             } else {
